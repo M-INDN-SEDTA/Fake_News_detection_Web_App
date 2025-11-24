@@ -1,67 +1,67 @@
 ```md
-# 🌍 News Authenticity & AI Credibility Checker
+# 🌍 Real-Time AI-Powered News Credibility Checker
 
-A web application that aggregates real-time global news, analyzes each article using AI credibility scoring, detects fake content using ML, supports user authentication, allows saving favorites, and provides text-to-speech reading of articles.
-
----
-
-## ⭐ Key Features
-
-- 🔍 Country-based news filtering  
-- 📰 Real-time news aggregation  
-- 🤖 AI credibility scoring (Gemini)  
-- 🧠 Offline ML fake-news model  
-- 🎙️ Text-to-speech article playback  
-- ❤️ Save favorite verified articles  
-- 🔐 Login & authentication system  
-- 🎨 Clean, responsive UI  
-- 🚀 Fast Flask backend APIs  
+A full-stack application that fetches global news, verifies authenticity using AI + ML, supports user login, favorites, voice-reading of articles, and country-based news filtering.
 
 ---
 
-## 🏗️ Project Structure
+## ✨ Features
+
+- 🌎 Country-specific and global news sources
+- 🔍 Search-based filtering
+- 🤖 Gemini-based AI credibility scoring (percentage true)
+- 🧠 Offline ML fake-news classifier
+- 🎙️ Text-to-speech voice reading
+- ❤️ Favorite-saving system (user required)
+- 🔐 Login, registration & session authentication
+- 📱 Fully responsive Bootstrap UI
+
+---
+
+## 🏗 Project Structure
 
 ```
 
-project_root/
+project/
 │
-├── app.py               # Main Flask backend
-├── model.py             # ML model loading & prediction
-├── static/
-│   ├── style.css        # UI styling
-│   └── script.js        # Frontend logic
+├── app.py
+├── model.py
+├── requirements.txt
+├── README.md
+├── LICENSE
 │
 ├── templates/
-│   ├── index.html       # Homepage
-│   ├── login.html       # Login
-│   ├── register.html    # Signup
-│   ├── favorites.html   # Saved articles
-│   └── auth.html        # Auth layout wrappers
+│   ├── index.html
+│   ├── login.html
+│   ├── register.html
+│   ├── favorites.html
+│   └── auth.html
 │
-├── models/
-│   ├── fake_news.pkl    # ML model (offline)
-│   └── vectorizer.pkl   # Text vectorizer
+├── static/
+│   ├── style.css
+│   ├── script.js
+│   └── icons/
 │
-├── requirements.txt     # Dependencies
-├── README.md            # Documentation
-└── LICENSE              # MIT or similar
+└── models/
+├── fake_news.pkl
+└── vectorizer.pkl
 
 ```
 
 ---
 
-## 🔧 Setup Instructions
+## ⚙️ Setup Instructions
 
 ### 1️⃣ Clone the repository
 
 ```
 
-git clone <your-repo-url>
-cd <project-folder>
+git clone <repo-url>
+cd <repo-folder>
 
 ```
 
-### 2️⃣ Create a Python virtual environment
+### 2️⃣ Create a virtual environment
 
 ```
 
@@ -69,7 +69,7 @@ python -m venv venv
 
 ```
 
-### 3️⃣ Activate venv
+### 3️⃣ Activate it
 
 **Windows:**
 ```
@@ -78,16 +78,14 @@ venv\Scripts\activate
 
 ```
 
-**Mac / Linux:**
+**Mac/Linux:**
 ```
 
 source venv/bin/activate
 
 ```
 
----
-
-## 📦 Install dependencies
+### 4️⃣ Install dependencies
 
 ```
 
@@ -95,9 +93,7 @@ pip install -r requirements.txt
 
 ```
 
----
-
-## ▶️ Run the app
+### 5️⃣ Run application
 
 ```
 
@@ -105,7 +101,7 @@ python app.py
 
 ```
 
-Then open:
+Now open:
 
 ```
 
@@ -115,86 +111,69 @@ Then open:
 
 ---
 
-## 🧪 Testing the Project
+## 🧠 Models Used
 
-- Load homepage  
-- Select country  
-- Search by keywords  
-- Click article  
-- Check AI authenticity  
-- Save favorite if logged in  
+### Gemini Online Authenticator  
+Returns:  
+```
 
----
+87% true
 
-## 🧠 Technology Stack
+```
 
-**Frontend:**
-- HTML  
-- CSS  
-- JavaScript  
+### Offline ML Model  
+Returns:
+```
 
-**Backend:**
-- Python  
-- Flask  
-- Jinja2  
+True  /  Fake
 
-**AI & ML:**
-- Gemini API  
-- Scikit-learn  
-- Pickle-based offline model  
+```
 
-**Storage:**
-- Local DB (or JSON storage depending on your current implementation)
+Both displayed inside each news card.
 
 ---
 
-## 🔐 User Authentication
+## 🛡 Authentication
 
-- Password hashed  
-- Session-based login  
-- User ownership of saved news  
+- Password hashing  
+- Session tracking  
+- Email-based identification  
+- Only logged-in users can save favorites  
 
 ---
 
-## 🗂️ Requirements Example
+## 📦 Requirements
 
-Typical contents of `requirements.txt`:
+Sample `requirements.txt` (expandable):
 
 ```
 
 Flask
 requests
 beautifulsoup4
-scikit-learn
-pandas
 numpy
+pandas
+scikit-learn
 python-dotenv
 
 ```
-
-If you add more, this file grows automatically.
 
 ---
 
 ## 🪪 License
 
-This project is licensed under the MIT License — free to use, modify, distribute.
+MIT License
 
 ---
 
-## 🙌 Credits
+## 🙌 Developer
 
-Created by: **YOU**  
-Role: Full-stack + ML integration  
-
----
-
-## ⭐ Contributing
-
-Pull requests are welcome — improvements, UI suggestions, optimizations, model upgrades, etc.
+Made with Python + JS + Flask + Gemini API  
+Built by: **YOU**
 
 ---
 
-## 👍 If you like this project
+## ⭐ Support
 
-Leave a ⭐ on the repository!
+If this project helped you — star the repo 👍
+
