@@ -19,8 +19,9 @@ A full-stack application that fetches global news, verifies authenticity using A
 
 ## 📊 Repo Analytics
 
-![Profile Views](https://komarev.com/ghpvc/?username=<YOUR_USER>&color=blue)
-![Stars](https://img.shields.io/github/stars/<YOUR_USER>/<YOUR_REPO>?style=social)
+![Profile Views](https://komarev.com/ghpvc/?username=M-INDN-SEDTA&color=blue)
+![Stars](https://img.shields.io/github/stars/M-INDN-SEDTA/Fake_News_detection_Web_App?style=social)
+
 
 ---
 
@@ -72,8 +73,8 @@ project_root/
 1. **Clone repo**
 
 ```bash
-git clone <your-repo-url>
-cd <repo-folder>
+git clone https://github.com/M-INDN-SEDTA/Fake_News_detection_Web_App
+cd Fake_News_detection_Web_App
 ```
 ```bash
 python -m venv venv
