@@ -52,6 +52,7 @@ project_root/
 │ ├── auth.html
 │ └── favorites.html
 ├── data/            # Saved favorites (json files)
+├── static/            # screenshots of this project
 ├── users.json       # Local user storage (json)
 ├── requirements.txt
 ├── README.md
