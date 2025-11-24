@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login / Signup</title>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        background: #f2f2f2;
+      }
+      .auth-container {
+        max-width: 400px;
+        margin: 80px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+      .tab-content {
+        margin-top: 20px;
+      }
+      .tab-pane {
+        display: none;
+      }
+      .tab-pane.active {
+        display: block;
+      }
+      /* Global body */
+      body {
+        background: #f2f2f2;
+        font-size: 16px;
+      }
+
+      /* Navbar adjustments */
+      .navbar-brand {
+        font-size: 1.2rem;
+      }
+      .nav-link {
+        font-size: 1rem;
+      }
+
+      /* Auth container */
+      .auth-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 25px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .tab-content {
+        margin-top: 20px;
+      }
+
+      .tab-pane {
+        display: none;
+      }
+      .tab-pane.active {
+        display: block;
+      }
+
+      /* Input fields and buttons */
+      input.form-control,
+      select.form-select,
+      button.btn {
+        font-size: 1rem;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .navbar-brand {
+          font-size: 1rem;
+        }
+        .nav-link {
+          font-size: 0.9rem;
+        }
+        .auth-container {
+          margin: 30px 10px;
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .navbar-brand {
+          font-size: 0.95rem;
+        }
+        .nav-link {
+          font-size: 0.85rem;
+        }
+        .auth-container {
+          margin: 20px 5px;
+          padding: 15px;
+        }
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}"
+          >Real-time News Detection</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.path == '/' %}active{% endif %}"
+                href="{{ url_for('index') }}"
+                >Home</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Auth container -->
+    <div class="auth-container">
+      <!-- Tabs -->
+      <ul class="nav nav-tabs" id="authTab">
+        <li class="nav-item">
+          <a class="nav-link active" href="#login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#signup">Signup</a>
+        </li>
+      </ul>
+
+      <!-- Flash messages -->
+      <div id="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div class="alert alert-{{ category }} mt-2">{{ message }}</div>
+        {% endfor %} {% endif %} {% endwith %}
+      </div>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <!-- LOGIN -->
+        <div id="login" class="tab-pane active">
+          <form method="POST" action="/login">
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <button class="btn btn-primary w-100">Login</button>
+          </form>
+        </div>
+
+        <!-- SIGNUP -->
+        <div id="signup" class="tab-pane">
+          <form method="POST" action="/signup">
+            <div class="mb-3">
+              <label>Username</label>
+              <input
+                type="text"
+                name="username"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" required />
+            </div>
+            <div class="mb-3">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label>Confirm Password</label>
+              <input
+                type="password"
+                name="password2"
+                class="form-control"
+                required
+              />
+            </div>
+            <button class="btn btn-success w-100">Signup</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab JS -->
+    <script>
+      const tabs = document.querySelectorAll(".auth-container .nav-link"); // only login/signup tabs
+      const panes = document.querySelectorAll(".tab-pane");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", (e) => {
+          e.preventDefault();
+          // switch tab classes
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          // switch panes
+          panes.forEach((p) => p.classList.remove("active"));
+          document
+            .querySelector(tab.getAttribute("href"))
+            .classList.add("active");
+        });
+      });
+    </script>
+  </body>
+</html>

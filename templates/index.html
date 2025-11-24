@@ -1,0 +1,459 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>World News Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+      body {
+        background: #f2f2f2;
+      }
+      .news-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border-left: 5px solid #007bff;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: bold;
+      }
+      /* Global body */
+      body {
+        background: #f2f2f2;
+        font-size: 16px;
+      }
+
+      /* Navbar adjustments */
+      .navbar-brand {
+        font-size: 1.2rem;
+      }
+      .nav-link {
+        font-size: 1rem;
+      }
+
+      /* News Card */
+      .news-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        border-left: 5px solid #007bff;
+        word-wrap: break-word;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: bold;
+      }
+
+      /* Container adjustments */
+      .container {
+        padding: 0 15px;
+      }
+
+      /* Load more button */
+      #loadMore {
+        font-size: 1rem;
+      }
+
+      /* Mobile adjustments */
+      @media (max-width: 768px) {
+        .navbar-brand {
+          font-size: 1rem;
+        }
+        .nav-link {
+          font-size: 0.9rem;
+        }
+        .news-card {
+          padding: 12px;
+          font-size: 0.95rem;
+        }
+        #filterForm .row > .col-md-4 {
+          margin-bottom: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .navbar-brand {
+          font-size: 0.95rem;
+        }
+        .nav-link {
+          font-size: 0.85rem;
+        }
+        .news-card {
+          padding: 10px;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">Real-time News Detection</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.path == '/' %}active{% endif %}"
+                href="{{ url_for('index') }}"
+                >Home</a
+              >
+            </li>
+
+            {% if session.get('user') %}
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.path == '/favorites' %}active{% endif %}"
+                href="{{ url_for('favorites') }}"
+                >Favorites</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a
+                class="nav-link {% if request.path == '/auth' %}active{% endif %}"
+                href="{{ url_for('auth_page') }}"
+                >Login</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    {% if session.get('user') %}
+    <div
+      class="container mt-2 p-2 bg-light rounded shadow-sm d-flex justify-content-between align-items-center"
+    >
+      <strong
+        >Hi, {{ session['user']['username'] }} ({{ session['user']['email']
+        }})</strong
+      >
+      <span id="currentDateTime"></span>
+    </div>
+
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        };
+        document.getElementById("currentDateTime").textContent =
+          now.toLocaleDateString("en-US", options);
+      }
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+    </script>
+    {% endif %}
+
+    <div class="container mt-4">
+      <h2 class="mb-4">🌍 World News Dashboard</h2>
+
+      <form id="filterForm">
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <select name="country" class="form-select" id="country">
+              <option value="all">🌍 Global</option>
+              <option value="us">USA</option>
+              <option value="gb">UK</option>
+              <option value="in">India</option>
+              <option value="ca">Canada</option>
+              <option value="au">Australia</option>
+              <option value="de">Germany</option>
+              <option value="fr">France</option>
+              <option value="jp">Japan</option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <input
+              type="text"
+              name="search"
+              id="search"
+              class="form-control"
+              placeholder="Search news..."
+            />
+          </div>
+
+          <div class="col-md-4">
+            <button class="btn btn-primary w-100">Get News</button>
+          </div>
+        </div>
+      </form>
+
+      <hr />
+      <div id="newsList"></div>
+      <button id="loadMore" class="btn btn-dark w-100 mt-3">Load More</button>
+    </div>
+
+    <script>
+      let page = 1;
+      let lastCountry = "all";
+      let lastSearch = "";
+
+      function formatDate(dateStr) {
+        const d = new Date(dateStr);
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true, // ✅ 12-hour format with AM/PM
+        };
+        return d.toLocaleString("en-IN", options);
+      }
+
+      const countryMap = {
+        us: "USA",
+        gb: "UK",
+        in: "India",
+        ca: "Canada",
+        au: "Australia",
+        de: "Germany",
+        fr: "France",
+        jp: "Japan",
+        all: "Global",
+      };
+
+      // ---------------------------
+      async function loadNews(reset = false) {
+        const country = document.getElementById("country").value;
+        const search = document.getElementById("search").value.trim();
+        const userLoggedIn = {{ 'true' if session.get('user') else 'false' }};
+
+        if (country !== lastCountry || search !== lastSearch) {
+          reset = true;
+          page = 1;
+          lastCountry = country;
+          lastSearch = search;
+        }
+
+        const res = await fetch(
+          `/load?country=${country}&search=${search}&page=${page}`
+        );
+        const data = await res.json();
+
+        const list = document.getElementById("newsList");
+        if (reset) list.innerHTML = "";
+
+        data.news.forEach((n) => {
+  const card = document.createElement("div");
+  card.className = "news-card";
+
+  // Heart icon only if user is logged in
+  // Heart icon only if user is logged in
+
+const heartHTML = userLoggedIn ? `<span class="heart-icon" style="cursor:pointer; color: gray;">♡</span>` : "";
+
+
+  card.innerHTML = `
+<h5 style="display: flex; justify-content: space-between; align-items: center;">
+  ${n.title} 
+  <span class="card-icons">
+    ${heartHTML}
+    <span class="speaker-icon" style="cursor:pointer;">🔊</span>
+  </span>
+</h5>
+
+<small class="text-muted">${
+      countryMap[n.country?.toLowerCase()] || ""
+    } | ${formatDate(n.publish_date)}</small>
+
+<details class="mt-2">
+  <summary>Show Description</summary>
+  <p class="mt-2"><strong>Summary:</strong> ${n.summary}</p>
+  <p><strong>Full Text:</strong><br>${n.text}</p>
+  ${n.url ? `<a href="${n.url}" target="_blank">Read full article →</a>` : ""}
+</details>
+
+<button class="btn btn-warning mt-2 check-auth">🔍 Check Authenticity</button>
+<div class="ai-result mt-2 fw-bold"></div>
+`;
+
+  card.dataset.title = n.title;
+card.dataset.summary = n.summary;
+card.dataset.text = n.text;
+card.dataset.country = n.country;
+card.dataset.publish_date = n.publish_date;
+
+
+  list.appendChild(card);
+});
+
+
+        // Attach click listeners AFTER cards are added
+        document.querySelectorAll(".check-auth").forEach((btn) => {
+          btn.addEventListener("click", () => detectNews(btn));
+        });
+      }
+
+      document.getElementById("loadMore").onclick = () => {
+        page++;
+        loadNews(false);
+      };
+      document.getElementById("filterForm").onsubmit = (e) => {
+        e.preventDefault();
+        loadNews(true);
+      };
+      loadNews(true);
+
+      // ---------------------------
+      async function detectNews(btn) {
+        const card = btn.closest(".news-card");
+        const box = card.querySelector(".ai-result");
+
+        const payload = {
+          title: card.dataset.title,
+          summary: card.dataset.summary,
+          text: card.dataset.text,
+        };
+
+        box.innerHTML = "⏳ Checking with AI...";
+
+        try {
+          const res = await fetch("/detect", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+
+          box.innerHTML = `
+  <span style="color:green;">Online Gemini Real Time: ${
+    data.gemini_percent
+  }% true</span><br>
+  <span style="color:${data.model_label === "True" ? "green" : "red"};">
+      Offline old ML Model: ${data.model_label}
+  </span>
+`;
+          card.dataset.gemini_percent = data.gemini_percent;
+          card.dataset.model_label = data.model_label;
+
+        } catch (err) {
+          box.innerHTML = "❌ Error checking AI";
+          console.error(err);
+        }
+      }
+
+      let currentUtterance = null; // Keep track of current speech
+
+      document.addEventListener("click", function (e) {
+        if (e.target.classList.contains("speaker-icon")) {
+          const card = e.target.closest(".news-card");
+          const textToSpeak = `${card.dataset.title}. ${card.dataset.summary}. ${card.dataset.text}`;
+
+          // Stop current speech if another speaker is clicked
+          if (currentUtterance) {
+            speechSynthesis.cancel();
+            document
+              .querySelectorAll(".speaker-icon")
+              .forEach((icon) => (icon.textContent = "🔊"));
+            if (currentUtterance.card === card) {
+              currentUtterance = null;
+              return; // If same card clicked again, just stop it
+            }
+          }
+
+          // Start new speech
+          const utterance = new SpeechSynthesisUtterance(textToSpeak);
+          currentUtterance = { utterance, card };
+          e.target.textContent = "⏸️"; // Change icon to pause
+
+          utterance.onend = () => {
+            e.target.textContent = "🔊";
+            currentUtterance = null;
+          };
+
+          speechSynthesis.speak(utterance);
+        }
+      });
+      document.addEventListener("click", async function (e) {
+        if (e.target.classList.contains("heart-icon")) {
+          const card = e.target.closest(".news-card");
+          const aiBox = card.querySelector(".ai-result");
+
+          // Prevent favorite if authenticity not checked
+          if (!aiBox.textContent.includes("Online Gemini Real Time")) {
+            alert("Please check authenticity before marking as favorite!");
+            return;
+          }
+
+          // Toggle favorite
+          const isFav = e.target.textContent === "❤️";
+          if (isFav) {
+            e.target.textContent = "♡";
+            e.target.style.color = "gray";
+          } else {
+            e.target.textContent = "❤️";
+            e.target.style.color = "red";
+
+            // Send favorite data to backend
+            const payload = {
+              {% if session.get('user') %}
+email: "{{ session['user']['email'] }}",
+{% else %}
+email: "",
+{% endif %}
+
+              title: card.dataset.title,
+              summary: card.dataset.summary,
+              text: card.dataset.text,
+              publish_date: card.dataset.publish_date,
+              country: card.dataset.country,
+              gemini_percent: card.dataset.gemini_percent || "",
+              model_label: card.dataset.model_label || "",
+              url: card.dataset.url || "",
+            };
+
+            try {
+              await fetch("/save_favorite", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
