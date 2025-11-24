@@ -4,6 +4,26 @@ A full-stack application that fetches global news, verifies authenticity using A
 
 ---
 
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?size=30&center=true&vCenter=true&width=1000&lines=AI+Powered+Fake+News+Detection;Flask+%2B+Python+%2B+JavaScript;Gemini+AI+%2B+ML+Classifier;Real-Time+World+News+Scanner)](https://git.io/typing-svg)
+
+## 🚀 Tech Used
+
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge)
+![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white&style=for-the-badge)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black&style=for-the-badge)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=white&style=for-the-badge)
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white&style=for-the-badge)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white&style=for-the-badge)
+
+---
+
+## 📊 Repo Analytics
+
+![Profile Views](https://komarev.com/ghpvc/?username=<YOUR_USER>&color=blue)
+![Stars](https://img.shields.io/github/stars/<YOUR_USER>/<YOUR_REPO>?style=social)
+
+---
+
 ## ✨ Features
 
 - 🌎 Country-specific and global news sources  
@@ -97,7 +117,10 @@ GEMINI_API_KEY=your_gemini_api_key_here
 python app.py
 ```
 
-> Open `http://127.0.0.1:5000` in your browser.
+> Open this line in your browser.
+```bash
+Open http://127.0.0.1:5000 in your browser.
+```
 
 ---
 
@@ -145,9 +168,6 @@ The app reads keys from environment variables (via `python-dotenv`):
 * Users must **log in** to save favorites.
 * Favorites are saved as JSON files in `/data/` with a randomized suffix (e.g. `user_example_com_1234.json`).
 * Favorite payload includes `title`, `summary`, `text`, `publish_date`, `country`, `gemini_percent`, `model_label`, `url`.
-
----
-
 
 ---
 
